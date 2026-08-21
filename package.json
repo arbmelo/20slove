@@ -1,0 +1,18 @@
+{
+  "name": "from-the-love-begins",
+  "version": "1.0.0",
+  "description": "From the Love Begins — 2020s Bollywood Playlist",
+  "private": true,
+  "scripts": {
+    "dev": "python -m http.server 3000",
+    "audit": "npm audit",
+    "audit:fix": "npm audit fix",
+    "lint:security": "npx retire --path . --outputformat text"
+  },
+  "devDependencies": {},
+  "dependencies": {},
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "license": "UNLICENSED"
+}

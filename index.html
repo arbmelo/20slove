@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ============================================================
+       SECURITY HEADERS (client-side layer)
+       Server-level headers are set in _headers / .htaccess / vercel.json
+       ============================================================ -->
+
+  <!-- Content Security Policy — restricts script/style/frame sources -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self' https://www.youtube.com https://s.ytimg.com 'unsafe-inline';
+    style-src 'self' https://fonts.googleapis.com 'unsafe-inline';
+    font-src 'self' https://fonts.gstatic.com;
+    frame-src https://www.youtube.com https://www.youtube-nocookie.com;
+    img-src 'self' https://img.youtube.com https://i.ytimg.com data: blob:;
+    media-src 'self' blob:;
+    connect-src 'self' https://www.youtube.com;
+    worker-src 'self';
+    object-src 'none';
+    base-uri 'self';
+    form-action 'self';
+    upgrade-insecure-requests;
+  ">
+
+  <!-- Prevent MIME-type sniffing -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+
+  <!-- Control referrer information sent to external sites -->
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+
+  <!-- Permissions Policy — disable unused browser features -->
+  <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=()">
+
+  <!-- HTTPS canonical — add your live domain here after hosting.
+       Example: <link rel="canonical" href="https://fromthelovebegins.com/"> -->
+
+  <!-- Primary SEO Meta Tags -->
+  <title>From the Love Begins | My 2020s Bollywood Playlist</title>
+  <meta name="title" content="From the Love Begins — 2020s Bollywood Playlist">
+  <meta name="description"
+    content="From the Love Begins is a personal 2020s Bollywood playlist radio. Stream nostalgic Hindi songs from the 2020s, tune in and relive the decade's best music.">
+  <meta name="keywords"
+    content="2020s Bollywood playlist, Hindi songs 2020, Bollywood radio, nostalgic Indian music, from the love begins, 2020s hits, Bollywood songs online">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#0a0e1a">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/jpeg" href="img/icon-512.jpg">
+  <link rel="apple-touch-icon" href="img/icon-512.jpg">
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Open Graph / Social -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="From the Love Begins — 2020s Bollywood Playlist">
+  <meta property="og:description"
+    content="A personal ambient radio of 2020s Bollywood hits. Press play and relive the decade's best music.">
+  <meta property="og:image" content="img/hero.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="From the Love Begins — 2020s Bollywood Playlist">
+  <meta name="twitter:description" content="A personal ambient radio of 2020s Bollywood hits.">
+  <meta name="twitter:image" content="img/hero.jpg">
+
+
+
+  <!-- Google Fonts -->
+  <!-- Google Fonts — crossorigin required for CORS font loading -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- Skip to content -->
+  <a href="#about" class="skip-link">Skip to content</a>
+
+  <!-- Hidden YouTube Audio Bridge -->
+  <div class="yt-bridge">
+    <div id="youtubeBridge"></div>
+  </div>
+
+  <!-- ================================================================= -->
+  <!-- HERO SECTION                                                        -->
+  <!-- ================================================================= -->
+  <section class="hero" id="hero">
+
+    <!-- Background Image -->
+    <div class="hero-bg">
+      <img src="img/hero.jpg"
+        alt="Dreamy lo-fi balcony at night with city skyline, the visual theme of From the Love Begins" loading="eager">
+      <div class="hero-bg-overlay"></div>
+      <div class="hero-bg-shimmer"></div>
+    </div>
+
+    <!-- Starfield Canvas -->
+    <canvas id="starfieldCanvas" aria-hidden="true"></canvas>
+
+    <!-- Floating Particles -->
+    <canvas id="particlesCanvas" aria-hidden="true"></canvas>
+
+    <!-- Rain & Lightning Canvas -->
+    <canvas id="rainCanvas" aria-hidden="true"></canvas>
+    <div id="lightningFlash"></div>
+
+
+
+    <!-- ============================== HEADER ============================== -->
+    <header class="site-header" role="banner">
+      <div class="header-row">
+        <!-- Listeners Badge -->
+        <div class="header-pill" id="listenerBadge" style="flex: 0 0 auto;">
+          <span class="listener-dot" aria-hidden="true"></span>
+          <span class="listener-count" id="listenerCount">942</span>
+          <span class="listener-label">listening</span>
+        </div>
+
+        <!-- Nav Links -->
+        <nav class="header-nav" aria-label="Primary navigation">
+          <a href="#about" class="header-pill nav-link">About</a>
+          <a href="#faq" class="header-pill nav-link">FAQ</a>
+          <!-- Support Button -->
+          <button id="supportBtn" class="header-pill nav-link support-btn" type="button" aria-label="Support the playlist" title="Support">
+            <span aria-hidden="true">☕</span>
+            <span>Support</span>
+          </button>
+          <!-- Fullscreen Toggle -->
+          <button id="fullscreenBtn" class="header-pill nav-link" type="button" aria-label="Toggle fullscreen mode" title="Fullscreen">
+            <svg id="fullscreenIcon" viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
+              <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+            </svg>
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- ============================== HERO CONTENT ============================== -->
+    <main class="hero-content">
+      <!-- Title -->
+      <div class="hero-title-wrap">
+        <h1 class="hero-title">From the<br>Love Begins</h1>
+        <p class="hero-subtitle">My 2020's Playlist</p>
+      </div>
+
+      <!-- Player Area -->
+      <div class="player-area">
+        <!-- Toggle Row — Rain + Sleep Timer + Tracklist -->
+        <div class="toggle-row">
+          <button id="rainToggleBtn" type="button" aria-pressed="false" class="rain-toggle"
+            aria-label="Toggle lo-fi rain ambience">
+            <span class="rain-toggle-icon" aria-hidden="true">🌧️</span>
+            <span>Lo-fi Rain?</span>
+            <span class="rain-status">OFF</span>
+          </button>
+          <button id="sleepTimerBtn" type="button" class="rain-toggle" aria-label="Sleep timer">
+            <span class="rain-toggle-icon" aria-hidden="true">🌙</span>
+            <span>Sleep</span>
+            <span class="rain-status" id="sleepTimerStatus">OFF</span>
+          </button>
+
+        </div>
+
+        <!-- Music Player -->
+        <section class="music-player" aria-label="Music player">
+          <!-- Cover Art Disc -->
+          <button class="cover-frame" id="coverButton" type="button" aria-label="Play from cover art">
+            <div class="cover-disc" id="coverDisc" style="background-image: url('img/hero.jpg');"></div>
+            <span class="cover-hole" aria-hidden="true"></span>
+          </button>
+
+          <!-- Track Info -->
+          <div class="track-block">
+            <div class="track-top">
+              <div class="track-name" id="trackName">Press play to begin...</div>
+            </div>
+            <p class="track-station">2020's Bollywood Collection</p>
+            <div class="progress-row">
+              <span id="timeNow">0:00</span>
+              <div class="progress-bar" id="progressBar" role="slider" aria-label="Track progress" aria-valuemin="0"
+                aria-valuemax="100" aria-valuenow="0" tabindex="0">
+                <div class="progress-fill" id="progressFill"></div>
+              </div>
+              <span id="timeTotal">0:00</span>
+            </div>
+            <!-- Volume Slider -->
+            <div class="volume-row">
+              <svg class="volume-icon" viewBox="0 0 24 24" fill="currentColor" width="14" height="14" aria-hidden="true">
+                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8.5v7a4.49 4.49 0 0 0 2.5-3.5zM14 3.23v2.06a6.51 6.51 0 0 1 0 13.42v2.06A8.51 8.51 0 0 0 14 3.23z"/>
+              </svg>
+              <input type="range" id="volumeSlider" class="volume-slider" min="0" max="100" value="100" aria-label="Volume">
+              <span id="volumeValue" class="volume-value">100</span>
+            </div>
+          </div>
+
+          <!-- Controls -->
+          <div class="player-actions">
+            <button class="icon-btn" id="prevButton" type="button" aria-label="Previous track">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m19 20-9-8 9-8v16Z"></path>
+                <path d="M5 19V5"></path>
+              </svg>
+            </button>
+            <button class="icon-btn play-btn" id="playButton" type="button" aria-label="Play music">
+              <svg id="playIcon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M8 5v14l11-7-11-7Z"></path>
+              </svg>
+            </button>
+            <button class="icon-btn" id="nextButton" type="button" aria-label="Next track">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m5 4 9 8-9 8V4Z"></path>
+                <path d="M19 5v14"></path>
+              </svg>
+            </button>
+          </div>
+        </section>
+
+        <!-- Hero Footer -->
+        <footer class="hero-footer">
+          A playlist by ArbMelo
+        </footer>
+      </div>
+
+      <!-- Scroll Cue -->
+      <a href="#about" aria-label="Scroll to learn more" class="scroll-cue">
+        <span>Scroll</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M12 5v14M5 12l7 7 7-7" />
+        </svg>
+      </a>
+    </main>
+  </section>
+
+
+
+  <!-- ================================================================= -->
+  <!-- SLEEP TIMER MENU (hidden by default)                                -->
+  <!-- ================================================================= -->
+  <div id="sleepTimerMenu" class="sleep-timer-menu" aria-hidden="true">
+    <button class="sleep-option" data-minutes="15">15 min</button>
+    <button class="sleep-option" data-minutes="30">30 min</button>
+    <button class="sleep-option" data-minutes="60">1 hour</button>
+    <button class="sleep-option" data-minutes="90">1.5 hr</button>
+    <button class="sleep-option" data-minutes="0">Cancel</button>
+  </div>
+
+  <!-- ================================================================= -->
+  <!-- KEYBOARD SHORTCUTS TOOLTIP                                          -->
+  <!-- ================================================================= -->
+  <div id="shortcutToast" class="shortcut-toast" aria-live="polite"></div>
+
+  <!-- ================================================================= -->
+  <!-- SHARE CARD OVERLAY                                                  -->
+  <!-- ================================================================= -->
+  <div id="shareOverlay" class="share-overlay" aria-hidden="true">
+    <div class="share-card-wrap">
+      <canvas id="shareCanvas" width="600" height="340"></canvas>
+      <div class="share-actions">
+        <button id="shareDownloadBtn" class="share-action-btn" type="button">⬇ Download</button>
+        <button id="shareCloseBtn" class="share-action-btn" type="button">✕ Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================= -->
+  <!-- SUPPORT MODAL                                                      -->
+  <!-- ================================================================= -->
+  <div id="supportOverlay" class="support-overlay" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="supportModalTitle">
+    <div class="support-card" role="document">
+      <!-- Close button -->
+      <button id="supportCloseBtn" class="support-close" type="button" aria-label="Close support modal">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+          <path d="M18 6 6 18M6 6l12 12"/>
+        </svg>
+      </button>
+
+      <!-- Header -->
+      <div class="support-header">
+        <div class="support-icon-wrap" aria-hidden="true">☕</div>
+        <h2 class="support-title" id="supportModalTitle">Support the Playlist</h2>
+        <p class="support-subtitle">This site runs free, forever — powered by love for music.<br>If it made your day a little better, a small gift means the world. 💜</p>
+      </div>
+
+      <!-- QR Code -->
+      <div class="support-qr-wrap">
+        <div class="support-qr-glow" aria-hidden="true"></div>
+        <img
+          src="img/support-qr1.jpeg"
+          alt="PhonePe UPI QR code — scan with any UPI app to support ArbMelo"
+          class="support-qr"
+          loading="lazy"
+          width="220"
+          height="220"
+        >
+      </div>
+
+      <!-- Instructions -->
+      <div class="support-steps">
+        <div class="support-step">
+          <span class="support-step-num" aria-hidden="true">1</span>
+          <span>Open PhonePe, GPay, or any UPI app</span>
+        </div>
+        <div class="support-step">
+          <span class="support-step-num" aria-hidden="true">2</span>
+          <span>Tap <strong>Scan QR</strong> and point at the code</span>
+        </div>
+        <div class="support-step">
+          <span class="support-step-num" aria-hidden="true">3</span>
+          <span>Enter any amount — even ₹10 helps! 🙏</span>
+        </div>
+      </div>
+
+      <!-- Email contact -->
+      <a href="mailto:arbmeloind@gmail.com" class="support-email" aria-label="Email ArbMelo at arbmeloind@gmail.com">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <rect x="2" y="4" width="20" height="16" rx="2"/>
+          <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+        </svg>
+        arbmeloind@gmail.com
+      </a>
+
+      <!-- Footer note -->
+      <p class="support-note">100% optional · No account needed · Keeps this site ad-free forever</p>
+    </div>
+  </div>
+
+  <!-- ================================================================= -->
+  <!-- COMPACT ABOUT SECTION                                              -->
+  <!-- ================================================================= -->
+  <section id="about" class="about-compact">
+    <div class="about-compact-inner">
+      <h2 class="compact-title">From the Love Begins</h2>
+      <p class="compact-desc">A personal 2020s Bollywood playlist — the songs that defined late nights, long drives, and
+        quiet moments. Press play, close your eyes, and let the music take you back.</p>
+      <div class="compact-tags">
+        <span class="compact-tag">🎵 2020s Bollywood</span>
+        <span class="compact-tag">🌧️ Lo-fi Rain Ambience</span>
+        <span class="compact-tag">💜 Free Forever</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================= -->
+  <!-- COMPACT FAQ (collapsed single row)                                  -->
+  <!-- ================================================================= -->
+  <section id="faq" class="faq-compact">
+    <div class="faq-compact-inner">
+      <details class="faq-mini">
+        <summary>What is this? <svg class="faq-chevron-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2">
+            <path d="m6 9 6 6 6-6" />
+          </svg></summary>
+        <p>A personal ambient radio of curated 2020s Bollywood songs — streams free via YouTube, no sign-up needed.</p>
+      </details>
+      <details class="faq-mini">
+        <summary>How does it work? <svg class="faq-chevron-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2">
+            <path d="m6 9 6 6 6-6" />
+          </svg></summary>
+        <p>Songs play in order from a YouTube playlist. Use the controls to play, pause, or skip. Toggle the rain
+          button for lo-fi ambience.</p>
+      </details>
+      <details class="faq-mini">
+        <summary>Keyboard shortcuts? <svg class="faq-chevron-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2">
+            <path d="m6 9 6 6 6-6" />
+          </svg></summary>
+        <p><strong>Space</strong> = Play/Pause · <strong>← →</strong> = Prev/Next · <strong>↑ ↓</strong> = Volume · <strong>F</strong> = Fullscreen · <strong>R</strong> = Rain · <strong>S</strong> = Share card</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- ================================================================= -->
+  <!-- COMPACT FOOTER                                                      -->
+  <!-- ================================================================= -->
+  <footer class="footer-compact">
+    <span class="footer-brand">From the Love Begins</span>
+    <span class="footer-dot">·</span>
+    <span class="footer-note">made with ❤️ by ArbMelo</span>
+  </footer>
+
+  <!-- YouTube IFrame API
+       NOTE: YouTube's iframe_api does not support SRI (its content changes
+       server-side). It is constrained by the CSP script-src allowlist above.
+  -->
+  <script src="https://www.youtube.com/iframe_api"></script>
+
+  <!-- Main Script -->
+  <script src="script.js" defer></script>
+
+  <!-- Service Worker Registration (PWA offline support) -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js', { scope: '/' })
+          .catch(() => { /* SW registration failed silently — non-critical */ });
+      });
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,19 @@
+{
+  "name": "From the Love Begins",
+  "short_name": "Love Begins",
+  "description": "My 2020s Bollywood Playlist — stream nostalgic Hindi songs free, forever.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0e1a",
+  "theme_color": "#06b6d4",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "img/hero.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["music", "entertainment"]
+}

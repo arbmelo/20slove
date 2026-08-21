@@ -1,0 +1,38 @@
+# =============================================================
+# SECURITY HEADERS — Netlify / Cloudflare Pages
+# Deploy this file at your site root. It configures HTTP response
+# headers for every page served by Netlify or Cloudflare Pages.
+# =============================================================
+
+/*
+  # ─── HTTPS Enforcement ───────────────────────────────────────────────
+  # Forces browsers to only connect via HTTPS for 1 year.
+  # includeSubDomains: applies to all subdomains.
+  # preload: allows submission to the HSTS preload list (https://hstspreload.org).
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+
+  # ─── Clickjacking Protection ─────────────────────────────────────────
+  # Prevents the page from being embedded in an iframe on another origin.
+  X-Frame-Options: DENY
+
+  # ─── MIME Sniffing Prevention ────────────────────────────────────────
+  # Prevents browsers from guessing content type (a vector for XSS).
+  X-Content-Type-Options: nosniff
+
+  # ─── Referrer Policy ────────────────────────────────────────────────
+  # Sends origin only (no path/query) to cross-origin requests.
+  Referrer-Policy: strict-origin-when-cross-origin
+
+  # ─── Permissions Policy ──────────────────────────────────────────────
+  # Disables browser APIs this site does not use.
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()
+
+  # ─── Content Security Policy ─────────────────────────────────────────
+  # Restricts where scripts, styles, fonts, frames, and images can load from.
+  # 'unsafe-inline' for scripts/styles is required by the YouTube IFrame API
+  # and inline CSS animations. Nonce-based CSP would require a build step.
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://www.youtube.com https://s.ytimg.com 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; frame-src https://www.youtube.com https://www.youtube-nocookie.com; img-src 'self' https://img.youtube.com https://i.ytimg.com data: blob:; media-src 'self' blob:; connect-src 'self' https://www.youtube.com; worker-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;
+
+  # ─── Cross-Origin Policies ───────────────────────────────────────────
+  Cross-Origin-Opener-Policy: same-origin-allow-popups
+  Cross-Origin-Resource-Policy: same-site
