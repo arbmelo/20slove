@@ -239,6 +239,11 @@ body {
 }
 
 .nav-link {
+  display: inline-flex;
+}
+
+/* Hide text-only nav links (About / FAQ) on small screens to save space */
+.nav-link.text-nav-link {
   display: none;
 }
 
@@ -250,7 +255,7 @@ body {
   .header-row {
     gap: 12px;
   }
-  .nav-link {
+  .nav-link.text-nav-link {
     display: inline-flex;
   }
 }
